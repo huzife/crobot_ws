@@ -1,0 +1,3 @@
+[submodule "src/crobot_control"]
+	path = src/crobot_control
+	url = ssh://git@git.scut.mcurobot.com:10022/Huang/crobot_control.git
