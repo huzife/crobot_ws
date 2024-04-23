@@ -1,0 +1,13 @@
+<launch>
+    <!-- crobot control -->
+    <arg name="base_port" default="/dev/smart_car"/>
+    <include file="$(find crobot_control)/launch/crobot_control.launch">
+        <arg name="port_name" value="$(arg base_port)"/>
+    </include>
+
+    <!-- laser -->
+    <arg name="laser_port" default="/dev/lidar"/>
+    <include file="$(find lslidar_driver)/launch/lslidar_serial.launch">
+        <arg name="port_name" value="$(arg laser_port)"/>
+    </include>
+</launch>
