@@ -1,0 +1,11 @@
+<launch>
+  <arg name="model" default="2wd"/>
+  <param
+    name="robot_description"
+    textfile="$(find crobot_description)/urdf/crobot_description_$(arg model).urdf"/>
+  <node
+    name="robot_state_publisher"
+    pkg="robot_state_publisher"
+    type="robot_state_publisher"/>
+
+</launch>

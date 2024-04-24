@@ -1,4 +1,10 @@
 <launch>
+    <!-- robot description -->
+    <arg name="robot_model" default="2wd"/>
+    <include file="$(find crobot_description)/launch/crobot_description.launch">
+        <arg name="model" value="$(arg robot_model)"/>
+    </include>
+
     <!-- crobot control -->
     <arg name="base_port" default="/dev/smart_car"/>
     <include file="$(find crobot_control)/launch/crobot_control.launch">
