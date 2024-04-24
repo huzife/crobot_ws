@@ -1,0 +1,4 @@
+TebLocalPlannerROS:
+  xy_goal_tolerance: 0.1
+  yaw_goal_tolerance: 0.1
+  min_obstacle_dist: 0.25
