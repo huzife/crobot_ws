@@ -9,5 +9,5 @@ local_costmap:
   resolution: 0.02
   plugins:
     - {name: lidar_obstacle_layer,    type: "spatio_temporal_voxel_layer/SpatioTemporalVoxelLayer"}
-    - {name: virtual_wall, type: "virtual_wall::VirtualWall"}
+    #- {name: virtual_wall, type: "virtual_wall::VirtualWall"}
     - {name: inflation_layer,         type: "costmap_2d::InflationLayer"}
