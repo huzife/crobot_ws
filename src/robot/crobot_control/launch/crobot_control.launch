@@ -1,0 +1,6 @@
+<launch>
+    <arg name="port_name" default="/dev/smart_car"/>
+    <node pkg="crobot_control" type="crobot_control" name="crobot_control" output="screen">
+        <param name="port_name" value="$(arg port_name)" />
+    </node>
+</launch>
