@@ -17,8 +17,6 @@ class Crobot_Control {
 private:
     ros::NodeHandle nh_;
     ros::NodeHandle nh_private_;
-    ros::ServiceServer set_pid_interval_server_;
-    ros::ServiceServer set_count_per_rev_server_;
     ros::ServiceServer set_correction_factor_server_;
     ros::ServiceServer reset_odometry_server_;
     ros::Subscriber cmd_vel_sub_;
@@ -42,13 +40,9 @@ public:
     bool start();
 
 private:
+    bool set_motor_param();
+    bool set_robot_base();
     void cmd_vel_callback(const geometry_msgs::Twist::ConstPtr& msg);
-    bool set_pid_interval_func(
-        crobot_control::PidInterval::Request& req,
-        crobot_control::PidInterval::Response& resp);
-    bool set_count_per_rev_func(
-        crobot_control::CountPerRev::Request& req,
-        crobot_control::CountPerRev::Response& resp);
     bool set_correction_factor_func(
         crobot_control::CorrectionFactor::Request& req,
         crobot_control::CorrectionFactor::Response& resp);

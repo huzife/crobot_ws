@@ -1,8 +1,8 @@
 <launch>
-  <arg name="model" default="2wd"/>
+  <arg name="robot_model" default="edu_robot"/>
   <param
     name="robot_description"
-    textfile="$(find crobot_description)/urdf/crobot_description_$(arg model).urdf"/>
+    textfile="$(find crobot_description)/urdf/$(arg robot_model).urdf"/>
   <node
     name="robot_state_publisher"
     pkg="robot_state_publisher"

@@ -25,13 +25,15 @@ public:
 
     void set_count_per_rev_callback() override;
 
+    void set_robot_base_callback() override;
+
     void set_correction_factor_callback() override;
 
     void set_velocity_callback() override;
 
-    void get_odometry_callback(const crobot::Get_Odometry_Resp& resp) override;
-
     void reset_odometry_callback() override;
+
+    void get_odometry_callback(const crobot::Get_Odometry_Resp& resp) override;
 
     void get_imu_temperature_callback(const crobot::Get_IMU_Temperature_Resp& resp) override;
 

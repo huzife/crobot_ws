@@ -18,8 +18,10 @@ Crobot_Control_Callbacks::Crobot_Control_Callbacks(ros::NodeHandle& nh, ros::Nod
 
 void Crobot_Control_Callbacks::set_pid_interval_callback() {}
 void Crobot_Control_Callbacks::set_velocity_callback() {}
+void Crobot_Control_Callbacks::set_robot_base_callback() {}
 void Crobot_Control_Callbacks::set_count_per_rev_callback() {}
 void Crobot_Control_Callbacks::set_correction_factor_callback() {}
+void Crobot_Control_Callbacks::reset_odometry_callback() {}
 
 void Crobot_Control_Callbacks::get_odometry_callback(const Get_Odometry_Resp& resp) {
     ros::Time current_time = ros::Time::now();
@@ -60,8 +62,6 @@ void Crobot_Control_Callbacks::get_odometry_callback(const Get_Odometry_Resp& re
 
     odom_base_tb_.sendTransform(tfs);
 }
-
-void Crobot_Control_Callbacks::reset_odometry_callback() {}
 
 void Crobot_Control_Callbacks::get_imu_temperature_callback(const Get_IMU_Temperature_Resp& resp) {
     std_msgs::Float32 temperature;

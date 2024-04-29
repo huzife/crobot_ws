@@ -1,6 +1,15 @@
 <launch>
     <arg name="port_name" default="/dev/smart_car"/>
+    <arg name="robot_base" default="2wd"/>
     <node pkg="crobot_control" type="crobot_control" name="crobot_control" output="screen">
-        <param name="port_name" value="$(arg port_name)" />
+        <param name="port_name" value="$(arg port_name)"/>
+        <rosparam
+            file="$(find crobot_control)/config/motor.yaml"
+            command="load"
+            ns="motor"/>
+        <rosparam
+            file="$(find crobot_control)/config/robot_base/$(arg robot_base).yaml"
+            command="load"
+            ns="robot_base"/>
     </node>
 </launch>

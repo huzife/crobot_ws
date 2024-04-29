@@ -1,4 +1,5 @@
 #include "crobot_control/crobot_control.h"
+#include "crobot/robot_base/robot_base.h"
 
 using namespace crobot;
 using namespace crobot_control;
@@ -24,10 +25,6 @@ void Crobot_Control::init() {
     std::string port_name = "/dev/smart_car";
     nh_private_.getParam("port_name", port_name);
 
-    set_pid_interval_server_ = nh_private_.advertiseService(
-        "set_pid_interval", &Crobot_Control::set_pid_interval_func, this);
-    set_count_per_rev_server_ = nh_private_.advertiseService(
-        "set_count_per_rev", &Crobot_Control::set_count_per_rev_func, this);
     set_correction_factor_server_ = nh_private_.advertiseService(
         "set_correction_factor", &Crobot_Control::set_correction_factor_func, this);
     reset_odometry_server_ = nh_private_.advertiseService(
@@ -51,6 +48,10 @@ bool Crobot_Control::start() {
         return false;
     }
 
+    // Set motor param and robot base
+    if (!set_motor_param() || !set_robot_base())
+        return false;
+
     // Reset odometry
     controller_.send_request(Reset_Odometry_Req{});
 
@@ -68,6 +69,64 @@ bool Crobot_Control::start() {
     return true;
 }
 
+bool Crobot_Control::set_motor_param() {
+    int pid_interval;
+    int count_per_rev;
+    if (!nh_private_.getParam("motor/pid_interval", pid_interval) ||
+        !nh_private_.getParam("motor/count_per_rev", count_per_rev)) {
+        ROS_ERROR("Failed to load motor parameters, please check config file\n");
+        return false;
+    }
+
+    controller_.send_request(Set_PID_Interval_Req{static_cast<uint16_t>(pid_interval)});
+    controller_.send_request(Set_Count_Per_Rev_Req{static_cast<uint16_t>(count_per_rev)});
+
+    return true;
+}
+
+bool Crobot_Control::set_robot_base() {
+    int type;
+    if (!nh_private_.getParam("robot_base/type", type)) {
+        ROS_ERROR("Failed to load robot base type\n");
+        return false;
+    }
+
+    switch (static_cast<Robot_Base_Type>(type)) {
+        case Robot_Base_Type::ROBOT_BASE_2WD: {
+            Robot_Base_2WD_Param param;
+            if (!nh_private_.getParam("robot_base/radius", param.radius) ||
+                !nh_private_.getParam("robot_base/separation", param.separation)) {
+                ROS_ERROR("Failed to load 2wd parameters, please check config file\n");
+                return false;
+            }
+            controller_.send_request(Set_Robot_Base_2WD_Req{param});
+            break;
+        }
+        case Robot_Base_Type::ROBOT_BASE_3WO: {
+            Robot_Base_3WO_Param param;
+            if (!nh_private_.getParam("robot_base/radius", param.radius) ||
+                !nh_private_.getParam("robot_base/distance", param.distance)) {
+                ROS_ERROR("Failed to load 3wo parameters, please check config file\n");
+                return false;
+            }
+            controller_.send_request(Set_Robot_Base_3WO_Req{param});
+            break;
+        }
+        case Robot_Base_Type::ROBOT_BASE_4WD: {
+            Robot_Base_4WD_Param param;
+            if (!nh_private_.getParam("robot_base/radius", param.radius) ||
+                !nh_private_.getParam("robot_base/separation", param.separation)) {
+                ROS_ERROR("Failed to load 4wd parameters, please check config file\n");
+                return false;
+            }
+            controller_.send_request(Set_Robot_Base_4WD_Req{param});
+            break;
+        }
+    }
+
+    return true;
+}
+
 void Crobot_Control::cmd_vel_callback(
     const geometry_msgs::Twist::ConstPtr& msg) {
     controller_.send_request(
@@ -75,21 +134,6 @@ void Crobot_Control::cmd_vel_callback(
                          static_cast<float>(msg->linear.y),
                          static_cast<float>(msg->angular.z)});
 }
-
-bool Crobot_Control::set_pid_interval_func(
-    PidInterval::Request& req, PidInterval::Response& resp) {
-    controller_.send_request(Set_PID_Interval_Req{req.pid_interval});
-    resp.success = true;
-    return true;
-}
-
-bool Crobot_Control::set_count_per_rev_func(
-    CountPerRev::Request& req, CountPerRev::Response& resp) {
-    controller_.send_request(Set_Count_Per_Rev_Req{req.cpr});
-    resp.success = true;
-    return true;
-}
-
 
 bool Crobot_Control::set_correction_factor_func(
     CorrectionFactor::Request& req,

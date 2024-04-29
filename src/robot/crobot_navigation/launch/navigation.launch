@@ -6,7 +6,16 @@
     <param name = "/virtual_wall/map_name" value = "$(arg map_name)"/>
 
     <!--start robot and laser sensor-->
-    <include file="$(find crobot_bringup)/launch/crobot.launch"/>
+    <arg name="robot_model" default="edu_robot"/>
+    <arg name="base_port" default="/dev/smart_car"/>
+    <arg name="robot_base" default="2wd"/>
+    <arg name="laser_port" default="/dev/lidar"/>
+    <include file="$(find crobot_bringup)/launch/crobot.launch">
+        <arg name="robot_model" value="$(arg robot_model)"/>
+        <arg name="base_port" value="$(arg base_port)"/>
+        <arg name="robot_base" value="$(arg robot_base)"/>
+        <arg name="laser_port" value="$(arg laser_port)"/>
+    </include>
 
     <!-- Map server -->
     <arg name="map_file" default="$(find crobot_navigation)/maps/$(arg map_name).yaml"/>
