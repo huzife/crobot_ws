@@ -19,7 +19,7 @@ Crobot_Control_Callbacks::Crobot_Control_Callbacks(ros::NodeHandle& nh, ros::Nod
 void Crobot_Control_Callbacks::set_pid_interval_callback() {}
 void Crobot_Control_Callbacks::set_velocity_callback() {}
 void Crobot_Control_Callbacks::set_robot_base_callback() {}
-void Crobot_Control_Callbacks::set_count_per_rev_callback() {}
+void Crobot_Control_Callbacks::set_motor_param_callback() {}
 void Crobot_Control_Callbacks::set_correction_factor_callback() {}
 void Crobot_Control_Callbacks::reset_odometry_callback() {}
 

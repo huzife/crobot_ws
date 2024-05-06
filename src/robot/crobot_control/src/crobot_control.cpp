@@ -72,14 +72,16 @@ bool Crobot_Control::start() {
 bool Crobot_Control::set_motor_param() {
     int pid_interval;
     int count_per_rev;
+    bool reverse;
     if (!nh_private_.getParam("motor/pid_interval", pid_interval) ||
-        !nh_private_.getParam("motor/count_per_rev", count_per_rev)) {
+        !nh_private_.getParam("motor/count_per_rev", count_per_rev) ||
+        !nh_private_.getParam("motor/reverse", reverse)) {
         ROS_ERROR("Failed to load motor parameters, please check config file\n");
         return false;
     }
 
     controller_.send_request(Set_PID_Interval_Req{static_cast<uint16_t>(pid_interval)});
-    controller_.send_request(Set_Count_Per_Rev_Req{static_cast<uint16_t>(count_per_rev)});
+    controller_.send_request(Set_Motor_Param_Req{static_cast<uint32_t>(count_per_rev), reverse});
 
     return true;
 }
@@ -122,6 +124,17 @@ bool Crobot_Control::set_robot_base() {
             controller_.send_request(Set_Robot_Base_4WD_Req{param});
             break;
         }
+        case Robot_Base_Type::ROBOT_BASE_4MEC: {
+            Robot_Base_4MEC_Param param;
+            if (!nh_private_.getParam("robot_base/radius", param.radius) ||
+                !nh_private_.getParam("robot_base/distance_x", param.distance_x) ||
+                !nh_private_.getParam("robot_base/distance_y", param.distance_y)) {
+                ROS_ERROR("Failed to load 4mec parameters, please check config file\n");
+                return false;
+            }
+            controller_.send_request(Set_Robot_Base_4MEC_Req{param});
+            break;
+        }
     }
 
     return true;
@@ -138,7 +151,8 @@ void Crobot_Control::cmd_vel_callback(
 bool Crobot_Control::set_correction_factor_func(
     CorrectionFactor::Request& req,
     CorrectionFactor::Response& resp) {
-    controller_.send_request(Set_Correction_Factor_Req{req.linear,
+    controller_.send_request(Set_Correction_Factor_Req{req.linear_x,
+                                                       req.linear_y,
                                                        req.angular});
     resp.success = true;
     return true;

@@ -23,7 +23,7 @@ public:
 
     void set_pid_interval_callback() override;
 
-    void set_count_per_rev_callback() override;
+    void set_motor_param_callback() override;
 
     void set_robot_base_callback() override;
 
