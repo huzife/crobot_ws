@@ -5,5 +5,5 @@ pid_interval: 50
 count_per_rev: 3900
 reverse: true
 
-# count_per_rev: 1580
-# reverse: false
+# count_per_rev: 1330
+# reverse: true
